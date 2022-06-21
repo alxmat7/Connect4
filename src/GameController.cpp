@@ -1,5 +1,8 @@
 #include <iostream>
 #include <cassert>
+#include <chrono>
+#include <string>
+#include <thread>
 #include <SFML\Graphics.hpp>
 #include <SFML\Window.hpp>
 #include "GameController.h"
@@ -13,9 +16,9 @@ GameController::GameController(): board_(std::make_shared<Board>()), gameView_(s
 
 void GameController::run()
 {
-
 	//create opponent;
-	MiniMaxAiPlayer miniMaxAIPlayer(2);
+	int miniMaxDepth = 2;
+	MiniMaxAiPlayer miniMaxAIPlayer(miniMaxDepth);
 
 	auto window = gameView_->windowHandle();
 	assert(window);
@@ -26,88 +29,92 @@ void GameController::run()
 	while (window->isOpen())
 	{
 
-		sf::Event event;
-		while (window->pollEvent(event))
+		const std::string msgTie = "Game ended in a tie";
+		const std::string msgAiWins = "AI Wins";
+		const std::string msgHumanWins = "You Win!";
+		std::string msg;
+
+		if (humanPlayerTurn)
 		{
-			if (event.type == sf::Event::MouseMoved)
+			sf::Event event;
+			while (window->pollEvent(event))
 			{
-				gameView_->setPiecePosition(event.mouseMove.x);
-			}
-
-			if (!gameEnded && humanPlayerTurn && (event.type == sf::Event::MouseButtonPressed))
-			{
-				if (event.mouseButton.button == sf::Mouse::Left)
+				if (event.type == sf::Event::MouseMoved)
 				{
-#ifndef NDEBUG
-					std::cout << "the right button was pressed" << std::endl;
-					std::cout << "mouse x: " << event.mouseButton.x << std::endl;
-					std::cout << "mouse y: " << event.mouseButton.y << std::endl;
-#endif // !NDEBUG
-					int col = event.mouseButton.x / gameView_->gridSize();
-					board_->dropPiece(col, Board::HUMAN_PLAYER);
-					humanPlayerTurn = false;
+					gameView_->setPiecePosition(event.mouseMove.x);
 				}
-			}
 
-			if (event.type == sf::Event::Closed)
+				if (event.type == sf::Event::MouseButtonPressed)
+				{
+					if (event.mouseButton.button == sf::Mouse::Left)
+					{
+#ifndef NDEBUG
+						std::cout << "the right button was pressed" << std::endl;
+						std::cout << "mouse x: " << event.mouseButton.x << std::endl;
+						std::cout << "mouse y: " << event.mouseButton.y << std::endl;
+#endif // !NDEBUG
+						int col = event.mouseButton.x / gameView_->gridSize();
+						bool validDrop = false;
+						validDrop = board_->dropPiece(col, Board::HUMAN_PLAYER);
+						if (validDrop == false)
+						{
+							continue;
+						}
+						humanPlayerTurn = false;
+					}
+				}
+
+				if (event.type == sf::Event::Closed)
+				{
+					window->close();
+				}
+
+			}
+		}
+		else
+		{
+			//ai Player Plays now
+			if (humanPlayerTurn == false)
 			{
-				window->close(); //should call the destcurctor?
+				Board brdCopy = *board_;
+				miniMaxAIPlayer.play(*board_);
+#ifndef NDEBUG			
+				miniMaxAIPlayer.playNoAlphaBeta(brdCopy);
+#endif
+				humanPlayerTurn = true;
 			}
-
 		}
 
+		gameView_->draw();
+		
 		//Do we have a winner?
 		auto winner = board_->getWinner();
-		if (winner == Board::AI_PLAYER)
+
+		if (winner == Board::HUMAN_PLAYER)
 		{
-			std::cout << "AI Player wins" << std::endl;
+			std::cout << msgHumanWins << std::endl;
 			gameEnded = true;
+			msg = msgHumanWins;
 		}
-		else if (winner == Board::HUMAN_PLAYER)
+		else if (winner == Board::AI_PLAYER)
 		{
-			std::cout << "Human Player wins" << std::endl;
+			std::cout << msgAiWins << std::endl;
 			gameEnded = true;
+			msg = msgAiWins;
 		}
 		else if (winner == Board::NONE && !board_->validMovesExist())
 		{
-			std::cout << "Game ended in a tie" << std::endl;
+			std::cout << msgTie << std::endl;
 			gameEnded = true;
+			msg = msgTie;
 		}
 
-		//ai Player Plays now
-		if (!gameEnded && (humanPlayerTurn == false))
+		if (gameEnded)
 		{
-			Board brdCopy = *board_;
-			miniMaxAIPlayer.play(*board_);
-#ifndef NDEBUG			
-            miniMaxAIPlayer.playNoAlphaBeta(brdCopy);
-#endif
-			humanPlayerTurn = true;
-		}
-
-
-		//this should happenw hen some method like 'rendor' is called on GameView.
-		gameView_->draw();
-
-		//Do we have a winner?
-		winner = board_->getWinner();
-		if (winner == Board::AI_PLAYER)
-		{
-			std::cout << "AI Player wins" << std::endl;
-			gameEnded = true;
-		}
-		else if (winner == Board::HUMAN_PLAYER)
-		{
-			std::cout << "Human Player wins" << std::endl;
-			gameEnded = true;
-		}
-		else if (winner == Board::NONE && !board_->validMovesExist())
-		{
-			std::cout << "Game ended in a tie" << std::endl;
-			gameEnded = true;
+			using std::chrono::operator""s;
+			std::this_thread::sleep_until(std::chrono::system_clock::now() + 2s);
+			std::cout << msg << std::endl;
+			window->close();
 		}
 	}
-	
-
 }
-

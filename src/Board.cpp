@@ -100,15 +100,20 @@ Board::Markers Board::getWinner() const
 	return Markers::NONE;
 }
 
-void Board::dropPiece(int col, Markers marker)
+bool Board::dropPiece(int col, Markers marker)
 {
 	assert(col < nCols_);
 	int row = validLocations_[col];
-	assert(row < nRows_);
+	if (row >= nRows_)
+	{
+		std::cout << "Cannot drop any more pieces" << std::endl;
+		return false;
+	}
 	board_[row][col] = marker;
 
 	//update available locations
 	validLocations_[col]++;
+	return true;
 }
 
 

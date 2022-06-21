@@ -7,7 +7,6 @@ message(STATUS "HEADER_LIST=${HEADER_LIST}")
 add_executable(Connect4 
 	Connect4.cpp 
 	Board.cpp 
-	Globals.cpp 
 	MiniMaxAiPlayer.cpp 
 	GameController.cpp
 	GameView.cpp ${HEADER_LIST}

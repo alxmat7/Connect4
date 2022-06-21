@@ -1,3 +1,2 @@
 #pragma once
-
-extern const int CONNECT_SIZE;
+constexpr int CONNECT_SIZE = 4;

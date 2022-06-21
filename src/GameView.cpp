@@ -1,6 +1,5 @@
 #include "GameView.h"
 #include "Board.h"
-#include <iostream>
 
 GameView::GameView(std::shared_ptr<Board> board)
 {

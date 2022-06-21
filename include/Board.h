@@ -18,7 +18,7 @@ public:
 	int getNumCols() const;
     int getNumRows() const; //make them inline
 	Board::Markers getWinner() const;
-    void dropPiece(int col, Markers marker);
+    bool dropPiece(int col, Markers marker);
 	bool validMovesExist() const;
     void print() const;
 	const std::vector<std::vector <Markers>> &getBoard() const;
