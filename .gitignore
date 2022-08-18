@@ -1,1 +1,6 @@
 build/
+/src/cmake_install.cmake
+/src/CMakeFiles/generate.stamp
+/src/CMakeFiles/generate.stamp.depend
+/src/Connect4.vcxproj
+/src/Connect4.vcxproj.filters

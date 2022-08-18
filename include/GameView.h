@@ -9,27 +9,27 @@ class GameView
 {
 private:
 
-	sf::RenderWindow* window_;
-	std::shared_ptr<Board> board_; 
+    sf::RenderWindow* window_;
+    std::shared_ptr<Board> board_; 
 
-	int nRows_;
-	int nCols_;
-	int gridSize_;
+    int nRows_;
+    int nCols_;
+    int gridSize_;
 
-	int gameWindowWidth_;
-	int gameWindowHeight_;
+    int gameWindowWidth_;
+    int gameWindowHeight_;
 
-	int dropPieceX_; 
+    int dropPieceX_; 
 
 
 public:
-	GameView() = delete;
-	GameView(std::shared_ptr<Board> board);
-	sf::RenderWindow* windowHandle() const;
-	void setPiecePosition(int mouseX);
-	void draw();
-	int gridSize() const;
-	virtual ~GameView() = default;
+    GameView() = delete;
+    GameView(std::shared_ptr<Board> board);
+    sf::RenderWindow* windowHandle() const;
+    void setPiecePosition(int mouseX);
+    void draw();
+    int gridSize() const;
+    virtual ~GameView() = default;
 };
 
 

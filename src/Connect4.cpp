@@ -2,7 +2,7 @@
 
 int main()
 {
-	GameController gameController;
-	gameController.run();
-	return 0;
+    GameController gameController;
+    gameController.run();
+    return 0;
 }
