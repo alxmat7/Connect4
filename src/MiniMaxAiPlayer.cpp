@@ -2,6 +2,7 @@
 #include "Board.h"
 #include "Globals.h"
 #include <cassert>
+#include <climits>
 #include <iostream>
 #include <algorithm>
 #include <chrono> 

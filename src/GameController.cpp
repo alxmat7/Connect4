@@ -3,8 +3,8 @@
 #include <chrono>
 #include <string>
 #include <thread>
-#include <SFML\Graphics.hpp>
-#include <SFML\Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include "GameController.h"
 #include "GameView.h"
 #include "MiniMaxAiPlayer.h"

@@ -13,7 +13,7 @@ add_executable(Connect4
 	)
 	
 target_include_directories(Connect4 PRIVATE ../include)
-target_link_libraries(Connect4 sfml-graphics)
+target_link_libraries(Connect4 sfml-graphics sfml-window sfml-system)
 target_compile_features(Connect4 PUBLIC cxx_std_11)
 
 source_group(
