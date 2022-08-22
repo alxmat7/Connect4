@@ -6,29 +6,29 @@ class Board
 
 public:
 
-    enum Markers : char
+    enum class Markers : char
     {
         AI_PLAYER,
         HUMAN_PLAYER,
         NONE,
     };
 
-    Board(int nRows = 6, int nCols = 7);
+    Board(size_t nRows = 6, size_t nCols = 7);
     Board(std::vector<std::vector <Markers>> &board); //for testing an arbitrary starting state.
-    int getNumCols() const;
-    int getNumRows() const; //make them inline
+    size_t getNumCols() const;
+    size_t getNumRows() const; //make them inline
     Board::Markers getWinner() const;
     bool dropPiece(int col, Markers marker);
     bool validMovesExist() const;
     void print() const;
     const std::vector<std::vector <Markers>> &getBoard() const;
     const std::vector<int>& getMoves() const;
-    virtual ~Board();
+    virtual ~Board() {};
 
 private:
 
-    int nCols_;
-    int nRows_;
+    size_t nCols_;
+    size_t nRows_;
     std::vector<std::vector <Markers>> board_;
     std::vector<int> validLocations_;
 

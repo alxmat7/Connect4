@@ -13,12 +13,12 @@ private:
     sf::RenderWindow* window_;
     std::shared_ptr<Board> board_; 
 
-    int nRows_;
-    int nCols_;
-    int gridSize_;
+    size_t nRows_;
+    size_t nCols_;
+    unsigned int gridSize_;
 
-    int gameWindowWidth_;
-    int gameWindowHeight_;
+    unsigned int gameWindowWidth_;
+    unsigned int gameWindowHeight_;
 
     int dropPieceX_; 
 
@@ -30,7 +30,7 @@ public:
     void setPiecePosition(int mouseX);
     void draw();
     int gridSize() const;
-    virtual ~GameView() = default;
+    virtual ~GameView() {};
 };
 
 

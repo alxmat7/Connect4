@@ -8,17 +8,19 @@
 #include "Globals.h"
 
 
-Board::Board(int nRows, int nCols) : nRows_{ nRows }, nCols_{ nCols }, board_(nRows_, std::vector<Markers>(nCols_, Markers::NONE)), validLocations_(nCols_)
+Board::Board(size_t nRows, size_t nCols) : nRows_{ nRows }, nCols_{ nCols }, board_(nRows_, std::vector<Markers>(nCols_, Markers::NONE)), validLocations_(nCols_)
 {
 }
 
+/**
+ * For testing only - start with a specified board configuration
+ */
 Board::Board(std::vector<std::vector<Markers>> &board) : board_{ board }, validLocations_(board[0].size())
 {
     nRows_ = board_.size();
     nCols_ = board_[0].size();
 
     //disregard cache thrashing. Probably faster this way.
-
     for (int j = 0; j < nCols_; j++)
     {
         int i = 0;
@@ -28,21 +30,28 @@ Board::Board(std::vector<std::vector<Markers>> &board) : board_{ board }, validL
         }
         validLocations_[j] = i;
     }
-
-
 }
 
-int Board::getNumCols() const
+/**
+ * Get the number of columns in the board.
+ */
+size_t Board::getNumCols() const
 {
     return nCols_;
 }
 
-int Board::getNumRows() const
+/**
+ * Get the number of rows in the board.
+ */
+size_t Board::getNumRows() const
 {
     return nRows_;
 }
 
-
+/**
+ * Checks if there is a winner based on the current board state.
+ * The winner can be AI_PLAYER, HUMAN_PLAYER or NONE (if the game is a tie, or if it is still in progress)
+ */
 Board::Markers Board::getWinner() const
 {
     // Check diagonal oriented '/'
@@ -100,6 +109,9 @@ Board::Markers Board::getWinner() const
     return Markers::NONE;
 }
 
+/**
+ * 'Drop' a connect4 piece (AI_PLAYER or HUMAN_PLAYER) to a particular column. 
+ */
 bool Board::dropPiece(int col, Markers marker)
 {
     assert(col < nCols_);
@@ -111,18 +123,23 @@ bool Board::dropPiece(int col, Markers marker)
     }
     board_[row][col] = marker;
 
-    //update available locations
+    //update available locations, because now we have one fewer location to drop a piece.
     validLocations_[col]++;
     return true;
 }
 
-
+/**
+ * Check if the board still has emptly slots where a piece can be dropped.
+ */
 bool Board::validMovesExist() const
 {
     const auto& topRow = board_[nRows_ - 1];
     return (std::find(topRow.begin(), topRow.end(), Markers::NONE) != topRow.end()); // There is at least one empty space (Board::NONE) in top row
 }
 
+/**
+ * Print the board on console for diagnostics. Prints in color on Windows.
+ */
 void Board::print() const
 {
 #ifdef WIN32
@@ -134,23 +151,23 @@ void Board::print() const
 #endif
 
     std::cout << "           ";
-    for (int i = 0; i < getNumCols(); i++)
+    for (auto i = 0; i < getNumCols(); i++)
     {
         std::cout << i << " ";
     }
     std::cout << std::endl;
-    for (int i = getNumRows() - 1; i >= 0; i--)
+    for (auto i = getNumRows() - 1; i >= 0; i--)
     {
         std::cout << "           ";
-        for (int j = 0; j < getNumCols(); j++)
+        for (auto j = 0; j < getNumCols(); j++)
         {
-            char printChar = (board_[i][j] == Board::AI_PLAYER ? 'o' : (board_[i][j] == Board::HUMAN_PLAYER ? 'x' : '.'));
+            char printChar = (board_[i][j] == Markers::AI_PLAYER ? 'o' : (board_[i][j] == Board::Markers::HUMAN_PLAYER ? 'x' : '.'));
 #ifdef WIN32
-            if (board_[i][j] == Board::AI_PLAYER)
+            if (board_[i][j] == Markers::AI_PLAYER)
             {
                 SetConsoleTextAttribute(hConsole, colorAi);
             }
-            else if (board_[i][j] == Board::HUMAN_PLAYER)
+            else if (board_[i][j] == Markers::HUMAN_PLAYER)
             {
                 SetConsoleTextAttribute(hConsole, colorHuman);
             }
@@ -170,17 +187,24 @@ void Board::print() const
 #endif
 }
 
+/**
+ * Return the vector representing the board.
+ */
 const std::vector<std::vector<Board::Markers>>& Board::getBoard() const
 {
     return board_;
 }
 
+/**
+ * Returns the locations (row numbers) where the next piece goes.
+ * For example, if the current board is
+ *  row 3 |. . . . . . .|
+ *  row 1 |. . x . . . .|
+ *  row 0 |o x o o x . o| <--bottommost row
+ *        --------------
+ * this method returns [1, 1, 2, 1, 1, 0, 1]
+ */
 const std::vector<int>& Board::getMoves() const
 {
     return validLocations_;
-}
-
-
-Board::~Board()
-{
 }

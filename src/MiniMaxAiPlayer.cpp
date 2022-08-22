@@ -12,6 +12,9 @@ MiniMaxAiPlayer::MiniMaxAiPlayer(int depth) : depth_{depth}, WINNING_SCORE{ 1000
 
 }
 
+/**
+ * Calls minimax, gets the best move and drop the piece at the location.
+ */
 void MiniMaxAiPlayer::play(Board &board)
 {
     int bestMove = -1;
@@ -26,9 +29,12 @@ void MiniMaxAiPlayer::play(Board &board)
     std::cout<< "Minimax computation time: "<< duration<< " microseconds ~ " << duration/1000000 << " seconds" << std::endl;
     std::cout << "AI drops piece on column " << bestMove << "." << std::endl;
 #endif
-    board.dropPiece(bestMove, Board::AI_PLAYER);
+    board.dropPiece(bestMove, Board::Markers::AI_PLAYER);
 }
 
+/**
+ * Calls minimax (without alpha-beta pruning), gets the best move and drop the piece at the location.
+ */
 void MiniMaxAiPlayer::playNoAlphaBeta(Board& board)
 {
 
@@ -53,15 +59,15 @@ int MiniMaxAiPlayer::miniMax_(const Board& currentBoard, int &bestMove, int dept
     if (depth == 0 || !validMovesExist)
     {
         auto winner = currentBoard.getWinner();
-        if (winner == Board::AI_PLAYER) //Did the AI win?
+        if (winner == Board::Markers::AI_PLAYER) //Did the AI win?
         {
             return WINNING_SCORE; 
         }
-        else if (winner == Board::HUMAN_PLAYER) //Did the human Player win?
+        else if (winner == Board::Markers::HUMAN_PLAYER) //Did the human Player win?
         {
             return -WINNING_SCORE;
         }
-        else if (!validMovesExist && winner == Board::NONE) //Did the game end in a tie?
+        else if (!validMovesExist && winner == Board::Markers::NONE) //Did the game end in a tie?
         {
             return 0;
         }
@@ -88,7 +94,7 @@ int MiniMaxAiPlayer::miniMax_(const Board& currentBoard, int &bestMove, int dept
             //TODO: apply move and undo move instead of making a copy. This is especially important for larger games.
             Board temp = currentBoard; 
 
-            temp.dropPiece(col, Board::AI_PLAYER);
+            temp.dropPiece(col, Board::Markers::AI_PLAYER);
 
             int tempBestMove; //it seems you can pass in bestMove. it functions very much like a global variable.
 
@@ -104,7 +110,7 @@ int MiniMaxAiPlayer::miniMax_(const Board& currentBoard, int &bestMove, int dept
                 break;
             }
         }
-        return bestValue; // well bestValue can be returned at the end of the function, but this is good for readability.
+        return bestValue; // bestValue can be returned at the end of the function, but this is good for readability.
     }
     else /*if not the maximizer*/
     {
@@ -119,7 +125,7 @@ int MiniMaxAiPlayer::miniMax_(const Board& currentBoard, int &bestMove, int dept
             //make a copy of the board and apply the move
             Board temp = currentBoard;
 
-            temp.dropPiece(col, Board::HUMAN_PLAYER);
+            temp.dropPiece(col, Board::Markers::HUMAN_PLAYER);
 
             int tempBestMove; //it seems you can pass in bestMove. it functions very much like a global variable.
 
@@ -135,14 +141,14 @@ int MiniMaxAiPlayer::miniMax_(const Board& currentBoard, int &bestMove, int dept
                 break;
             }
         }
-        return bestValue; // well bestValue can be returned at the end of the function, but this is good for readability.
+        return bestValue; // bestValue can be returned at the end of the function, but this is good for readability.
     }
 }
 
 /**
-* This is the basic minimax code. It can really be combined with miniMax code to avoid code duplication, but having
-* it separately allows anyone to understand the basic Minimax AI algorithm.
-*/
+ * This is the basic minimax code. It can really be combined with miniMax code to avoid code duplication, but having
+ * it separately allows anyone to understand the basic Minimax AI algorithm.
+ */
 int MiniMaxAiPlayer::miniMaxBasic(const Board& currentBoard, int& bestMove, int depth, bool isMaximizingPlayer)
 {
     //Check if there are any more valid moves.
@@ -151,15 +157,15 @@ int MiniMaxAiPlayer::miniMaxBasic(const Board& currentBoard, int& bestMove, int 
     {
         auto winner = currentBoard.getWinner();
         //currentBoard.print();
-        if (winner == Board::AI_PLAYER) //Did the AI win?
+        if (winner == Board::Markers::AI_PLAYER) //Did the AI win?
         {
             return WINNING_SCORE; //Changed to reflect depth
         }
-        else if (winner == Board::HUMAN_PLAYER) //Did the human Player win?
+        else if (winner == Board::Markers::HUMAN_PLAYER) //Did the human Player win?
         {
             return -WINNING_SCORE; //changed to reflect depth.
         }
-        else if (!validMovesExist && winner == Board::NONE) //Did the game end in a tie?
+        else if (!validMovesExist && winner == Board::Markers::NONE) //Did the game end in a tie?
         {
             return 0;
         }
@@ -185,10 +191,10 @@ int MiniMaxAiPlayer::miniMaxBasic(const Board& currentBoard, int& bestMove, int 
             //make a copy of the board and apply the move
             Board temp = currentBoard;
 
-            temp.dropPiece(col, Board::AI_PLAYER);
+            temp.dropPiece(col, Board::Markers::AI_PLAYER);
             //temp.print();
 
-            int tempBestMove; //it seems you can pass in bestMove. it functions very much like a global variable.
+            int tempBestMove; 
 
             int score = miniMaxBasic(temp, tempBestMove, depth - 1, false);
             if (score > bestValue)
@@ -197,7 +203,7 @@ int MiniMaxAiPlayer::miniMaxBasic(const Board& currentBoard, int& bestMove, int 
                 bestMove = col;
             }
         }
-        return bestValue; // well bestValue can be returned at the end of the function, but this is good for readability.
+        return bestValue; // bestValue can be returned at the end of the function, but this is good for readability.
     }
     else  /*if not the maximizer*/
     {
@@ -212,10 +218,10 @@ int MiniMaxAiPlayer::miniMaxBasic(const Board& currentBoard, int& bestMove, int 
             //make a copy of the board and apply the move
             Board temp = currentBoard;
 
-            temp.dropPiece(col, Board::HUMAN_PLAYER);
+            temp.dropPiece(col, Board::Markers::HUMAN_PLAYER);
             //temp.print();
 
-            int tempBestMove; //it seems you can pass in bestMove. it functions very much like a global variable.
+            int tempBestMove; 
 
             int score = miniMaxBasic(temp, tempBestMove, depth - 1, true);
             if (score < bestValue)
@@ -224,11 +230,13 @@ int MiniMaxAiPlayer::miniMaxBasic(const Board& currentBoard, int& bestMove, int 
                 bestMove = col;
             }
         }
-        return bestValue; // well bestValue can be returned at the end of the function, but this is good for readability.
+        return bestValue; // bestValue can be returned at the end of the function, but this is good for readability.
     }
 }
 
-
+/**
+ * Compute the relative strength of a board configuration (minimax heuristic function)
+ */
 int MiniMaxAiPlayer::computeScore_(const Board& board) const
 {
     int score = 0;
@@ -245,7 +253,7 @@ int MiniMaxAiPlayer::computeScore_(const Board& board) const
     int cCount = 0;
     for (auto r = 0; r < nRows; r++)
     {
-        cCount += (board_[r][cColumn] == Board::AI_PLAYER);
+        cCount += (board_[r][cColumn] == Markers::AI_PLAYER);
         //cCount -= (board_[r][cColumn] == Board::HUMAN_PLAYER);
     }
     score += cCount * 3;
@@ -255,7 +263,7 @@ int MiniMaxAiPlayer::computeScore_(const Board& board) const
     cCount = 0;
     for (auto r = 0; r < nRows; r++)
     {
-        cCount += (board_[r][cColumn] == Board::AI_PLAYER);
+        cCount += (board_[r][cColumn] == Markers::AI_PLAYER);
         cCount -= (board_[r][cColumn] == Board::HUMAN_PLAYER);
     }
     score += cCount * 2;
@@ -265,7 +273,7 @@ int MiniMaxAiPlayer::computeScore_(const Board& board) const
     cCount = 0;
     for (auto r = 0; r < nRows; r++)
     {
-        cCount += (board_[r][cColumn] == Board::AI_PLAYER);
+        cCount += (board_[r][cColumn] == Markers::AI_PLAYER);
         cCount -= (board_[r][cColumn] == Board::HUMAN_PLAYER);
     }
     score += cCount * 2;
@@ -310,18 +318,20 @@ int MiniMaxAiPlayer::computeScore_(const Board& board) const
     return score;
 }
 
-//Write a lambda instead.
-int MiniMaxAiPlayer::count_(Board::Markers m1, Board::Markers m2, Board::Markers m3, Board::Markers m4, Board::Markers m) const
-{
-    return (m == m1) + (m == m2) + (m == m3) + (m == m4);
-}
-
+/**
+ * Helper method for the minimax heuristic function.
+ */
 int MiniMaxAiPlayer::lineScore_(Board::Markers m1, Board::Markers m2, Board::Markers m3, Board::Markers m4) const
 {
     int score = 0;
     
-    int numAiMarkers = count_(m1, m2, m3, m4, Board::AI_PLAYER);
-    int numHumanMarkers = count_(m1, m2, m3, m4, Board::HUMAN_PLAYER);
+    //Count the number of occurrences of a marker, given a set of 4 markers. 
+    auto count = [](Board::Markers m1, Board::Markers m2, Board::Markers m3, Board::Markers m4, Board::Markers m)
+    {
+        return (m == m1) + (m == m2) + (m == m3) + (m == m4);
+    };
+    int numAiMarkers = count(m1, m2, m3, m4, Board::Markers::AI_PLAYER);
+    int numHumanMarkers = count(m1, m2, m3, m4, Board::Markers::HUMAN_PLAYER);
     int numEmptyMarkers = CONNECT_SIZE - numAiMarkers - numHumanMarkers;
 
     //opponent is always human Player.
@@ -338,5 +348,3 @@ int MiniMaxAiPlayer::lineScore_(Board::Markers m1, Board::Markers m2, Board::Mar
     else
         return score;
 }
-
-

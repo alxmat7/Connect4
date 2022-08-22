@@ -14,6 +14,6 @@ private:
 public:
     GameController();
     void run();
-    virtual ~GameController() = default;
+    virtual ~GameController() {};
 };
 

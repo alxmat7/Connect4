@@ -14,10 +14,14 @@ GameController::GameController(): board_(std::make_shared<Board>()), gameView_(s
 {
 }
 
+/**
+ * Run the game loop
+ * Calls the AI and display logic.
+ */
 void GameController::run()
 {
     //create opponent;
-    int miniMaxDepth = 2;
+    constexpr int miniMaxDepth{ 2 }; //change the depth to increase or decrease look-up depth.
     MiniMaxAiPlayer miniMaxAIPlayer(miniMaxDepth);
 
     auto window = gameView_->windowHandle();
@@ -55,7 +59,7 @@ void GameController::run()
 #endif // !NDEBUG
                         int col = event.mouseButton.x / gameView_->gridSize();
                         bool validDrop = false;
-                        validDrop = board_->dropPiece(col, Board::HUMAN_PLAYER);
+                        validDrop = board_->dropPiece(col, Board::Markers::HUMAN_PLAYER);
                         if (validDrop == false)
                         {
                             continue;
@@ -90,19 +94,19 @@ void GameController::run()
         //Do we have a winner?
         auto winner = board_->getWinner();
 
-        if (winner == Board::HUMAN_PLAYER)
+        if (winner == Board::Markers::HUMAN_PLAYER)
         {
             std::cout << msgHumanWins << std::endl;
             gameEnded = true;
             msg = msgHumanWins;
         }
-        else if (winner == Board::AI_PLAYER)
+        else if (winner == Board::Markers::AI_PLAYER)
         {
             std::cout << msgAiWins << std::endl;
             gameEnded = true;
             msg = msgAiWins;
         }
-        else if (winner == Board::NONE && !board_->validMovesExist())
+        else if (winner == Board::Markers::NONE && !board_->validMovesExist())
         {
             std::cout << msgTie << std::endl;
             gameEnded = true;
