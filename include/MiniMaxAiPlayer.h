@@ -3,8 +3,6 @@
 #include "Player.h"
 #include "Board.h" 
 
-//CHECK method capitalization.. google style guide.
-
 class MiniMaxAiPlayer :public Player
 {
 public:
