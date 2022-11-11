@@ -1,36 +1,37 @@
 #pragma once
-
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-class Board;
-
-class GameView
+namespace Connect4
 {
-private:
+    class Board;
 
-    sf::RenderWindow* window_;
-    std::shared_ptr<Board> board_; 
+    class GameView
+    {
+    private:
 
-    size_t nRows_;
-    size_t nCols_;
-    unsigned int gridSize_;
+        sf::RenderWindow* window_;
+        std::shared_ptr<Board> board_;
 
-    unsigned int gameWindowWidth_;
-    unsigned int gameWindowHeight_;
+        size_t nRows_;
+        size_t nCols_;
+        unsigned int gridSize_;
 
-    int dropPieceX_; 
+        unsigned int gameWindowWidth_;
+        unsigned int gameWindowHeight_;
+
+        int dropPieceX_;
 
 
-public:
-    GameView() = delete;
-    GameView(std::shared_ptr<Board> board);
-    sf::RenderWindow* windowHandle() const;
-    void setPiecePosition(int mouseX);
-    void draw();
-    int gridSize() const;
-    virtual ~GameView() {};
-};
-
+    public:
+        GameView() = delete;
+        GameView(std::shared_ptr<Board> board);
+        sf::RenderWindow* windowHandle() const;
+        void setPiecePosition(int mouseX);
+        void draw();
+        int gridSize() const;
+        virtual ~GameView() {};
+    };
+}
 

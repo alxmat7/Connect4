@@ -1,19 +1,21 @@
 #pragma once
 #include <memory>
 
-class Board;
-class GameView;
-
-class GameController
+namespace Connect4
 {
-private:
+    class Board;
+    class GameView;
 
-    std::shared_ptr<Board> board_;
-    std::shared_ptr<GameView> gameView_;
+    class GameController
+    {
+    private:
 
-public:
-    GameController();
-    void run();
-    virtual ~GameController() {};
-};
+        std::shared_ptr<Board> board_;
+        std::shared_ptr<GameView> gameView_;
 
+    public:
+        GameController(bool isSimulation = false);
+        void run();
+        virtual ~GameController() {};
+    };
+}

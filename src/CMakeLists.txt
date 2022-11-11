@@ -1,5 +1,4 @@
-
-set(HEADER_LIST "${Connect4_SOURCE_DIR}/include/Board.h" "${Connect4_SOURCE_DIR}/include/Globals.h" "${Connect4_SOURCE_DIR}/include/MiniMaxAiPlayer.h" "${Connect4_SOURCE_DIR}/include/Player.h" "${Connect4_SOURCE_DIR}/include/GameController.h" "${Connect4_SOURCE_DIR}/include/GameView.h")
+set(HEADER_LIST "${Connect4_SOURCE_DIR}/include/Board.h" "${Connect4_SOURCE_DIR}/include/Globals.h" "${Connect4_SOURCE_DIR}/include/MiniMaxAiPlayer.h" "${Connect4_SOURCE_DIR}/include/Player.h" "${Connect4_SOURCE_DIR}/include/GameController.h" "${Connect4_SOURCE_DIR}/include/GameView.h" "${Connect4_SOURCE_DIR}/include/MctsAiPlayer.h")
 
 message(STATUS "HEADER_LIST=${HEADER_LIST}")
 
@@ -9,7 +8,8 @@ add_executable(Connect4
 	Board.cpp 
 	MiniMaxAiPlayer.cpp 
 	GameController.cpp
-	GameView.cpp ${HEADER_LIST}
+	GameView.cpp 
+	MctsAiPlayer.cpp ${HEADER_LIST}
 	)
 	
 target_include_directories(Connect4 PRIVATE ../include)

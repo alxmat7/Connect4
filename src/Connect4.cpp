@@ -2,7 +2,7 @@
 
 int main()
 {
-    GameController gameController;
+    Connect4::GameController gameController(false);
     gameController.run();
     return 0;
 }

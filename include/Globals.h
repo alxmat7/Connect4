@@ -1,2 +1,5 @@
 #pragma once
-constexpr int CONNECT_SIZE = 4;
+namespace Connect4
+{
+    constexpr int CONNECT_SIZE = 4;
+}
