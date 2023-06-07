@@ -1,7 +1,7 @@
 # Connect Four AI
 
 Connect Four is a two-player abstract game with simple rules (https://en.wikipedia.org/wiki/Connect_Four). The game has a low branching factor, making it an ideal zero-sum strategy game for testing game AIs.  
-This is an implementation of Connect Four AI with the Minimax algorithm. 
+This is an implementation of Connect Four with two AIs - one using Monte Carlo tree search and the other using Minmax. 
 
 ![connect4 on linux](https://user-images.githubusercontent.com/8562118/185773849-c287cb2c-6d57-4444-acfe-34e1219d5fef.png)
 
